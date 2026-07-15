@@ -1,11 +1,11 @@
 "use client";
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 export default function CallToAction() {
-  // Framer Motion variants for staggered animations
-  const containerVariants = {
+  // Explicitly type the variants using Framer Motion's 'Variants' type
+  const containerVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
@@ -13,12 +13,12 @@ export default function CallToAction() {
       transition: {
         duration: 0.8,
         ease: "easeOut",
-        staggerChildren: 0.15, // This staggers the text elements
+        staggerChildren: 0.15,
       },
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 
@@ -30,10 +30,10 @@ export default function CallToAction() {
   return (
     <section className="relative w-full py-20 md:py-32 px-5 sm:px-8 md:px-12 lg:px-24 bg-[#fcfcfb] dark:bg-[#100918] transition-colors duration-[800ms] overflow-hidden">
       
-      {/* Background Ambient Glow (Adds a subtle beauty to the section) */}
+      {/* Background Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#3a4f36]/5 dark:bg-[#FFD166]/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-      {/* Floating Bento Card - Now strictly rounded-sm */}
+      {/* Floating Bento Card */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -61,13 +61,13 @@ export default function CallToAction() {
             Leave the noise behind. Book your unforgettable stay today and step into a world crafted for ultimate peace and premium comfort.
           </motion.p>
           
-          {/* Lighter, Premium Button with graceful hover state */}
+          {/* Lighter, Premium Button */}
           <motion.div variants={itemVariants}>
             <Link 
               href="/book-now"
               className="group flex items-center justify-between bg-[#3a4f36]/5 dark:bg-[#FFD166]/10 border border-[#3a4f36]/20 dark:border-[#FFD166]/20 text-[#3a4f36] dark:text-[#FFD166] rounded-sm p-1.5 pr-6 w-max hover:bg-[#3a4f36] dark:hover:bg-[#FFD166] hover:text-white dark:hover:text-[#16121d] transition-all duration-500"
             >
-              {/* Square Icon Block inside the button */}
+              {/* Square Icon Block */}
               <div className="w-12 h-12 rounded-sm bg-[#3a4f36]/10 dark:bg-[#FFD166]/20 group-hover:bg-white/20 dark:group-hover:bg-black/10 flex items-center justify-center transition-colors duration-500">
                 <svg className="w-5 h-5 transition-transform duration-500 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7-7l7 7-7 7"></path>
@@ -86,7 +86,6 @@ export default function CallToAction() {
           variants={itemVariants}
           className="w-full lg:w-1/2 h-[400px] sm:h-[500px] lg:h-auto relative overflow-hidden p-4 sm:p-5 lg:p-6 flex"
         >
-          {/* Inner wrapper with rounded-sm */}
           <div className="relative w-full h-full rounded-sm overflow-hidden group shadow-lg">
             <img 
               src="https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?q=80&w=2070&auto=format&fit=crop" 
