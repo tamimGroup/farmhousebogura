@@ -3,13 +3,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Handle Dark Mode Toggle on the document element
+  // Determine if we are on the home page
+  const isHomePage = pathname === '/';
+  
+  // The Navbar should be in its "Glass Pill" state if we are scrolled down OR if we are NOT on the homepage
+  const isGlassState = !isHomePage || isScrolled;
+
+  // Handle Dark Mode Toggle
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -18,47 +27,63 @@ export default function Navbar() {
     }
   }, [isDarkMode]);
 
+  // Handle Scroll Effect for Floating Glass Navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    
+    // Only bother tracking scroll if we are on the homepage
+    if (isHomePage) {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [isHomePage]);
+
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, []);
+  }, [pathname]);
+
+  // Dynamic class assignments based on the derived glass state
+  const navContainerClasses = isGlassState
+    ? "fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1000px] px-10 py-5 bg-white/45 dark:bg-black/45 backdrop-blur-xl border border-white/60 dark:border-white/10 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] z-[9999] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex justify-between items-center"
+    : "fixed top-0 left-0 w-full lg:w-[55%] px-6 lg:px-24 pt-8 pb-4 bg-transparent border-transparent z-[9999] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex justify-between items-center";
 
   return (
-    <nav className="fixed top-[clamp(15px,3vh,30px)] left-1/2 -translate-x-1/2 w-[90%] max-w-[950px] px-5 py-3 sm:px-6 rounded-2xl bg-white/20 dark:bg-black/30 backdrop-blur-xl border border-white/40 dark:border-white/10 z-[9999] flex justify-between items-center shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] transition-all duration-500">
+    <nav className={navContainerClasses}>
       
-      {/* Brand / Logo */}
-      <div className="flex items-center z-50">
+      {/* Brand / Logo Area */}
+      <div className={`flex items-center transition-all duration-500 ${isGlassState ? '' : 'flex-1'}`}>
         <Link href="/" className="hover:opacity-75 transition-opacity">
           <Image 
             src="/logo.png" 
-            alt="Hotel Logo" 
-            width={44} 
-            height={44} 
-            className="object-contain"
+            alt="Farmhouse Logo" 
+            width={isGlassState ? 40 : 64} 
+            height={isGlassState ? 40 : 64} 
+            className="object-contain transition-all duration-300 rounded-md" 
           />
         </Link>
       </div>
 
       {/* Desktop Navigation */}
-      <ul className="hidden lg:flex space-x-6 items-center relative">
-        <li>
-          <Link href="/" className="font-semibold text-[13px] tracking-[0.15em] uppercase text-slate-800 dark:text-white hover:text-slate-500 dark:hover:text-slate-300 transition-colors duration-300">
-            Home
-          </Link>
+      <ul className="hidden lg:flex items-center gap-8 transition-all duration-300">
+        
+        <li className={`${isGlassState ? 'block' : 'hidden'}`}>
+          <Link href="/" className="font-bold text-[13px] tracking-[0.05em] uppercase text-slate-900 dark:text-white hover:text-slate-500 transition-colors">Home</Link>
         </li>
+        
         <li>
-          <Link href="/rooms" className="font-semibold text-[13px] tracking-[0.15em] uppercase text-slate-800 dark:text-white hover:text-slate-500 dark:hover:text-slate-300 transition-colors duration-300">
-            Rooms
-          </Link>
+          <Link href="/rooms" className="font-bold text-[13px] tracking-[0.05em] uppercase text-slate-900 dark:text-white hover:text-slate-500 transition-colors">Rooms</Link>
         </li>
 
         {/* Desktop Experiences Dropdown */}
         <li 
-          className="relative group z-[110]"
+          className={`relative group z-[110] ${isGlassState ? 'block' : 'hidden'}`}
           onMouseEnter={() => setIsDropdownOpen(true)}
           onMouseLeave={() => setIsDropdownOpen(false)}
         >
-          <div className="flex items-center gap-1 cursor-pointer font-semibold text-[13px] tracking-[0.15em] uppercase text-slate-800 dark:text-white hover:text-slate-500 dark:hover:text-slate-300 transition-colors duration-300 py-2">
+          <div className="flex items-center gap-1 cursor-pointer font-bold text-[13px] tracking-[0.05em] uppercase text-slate-900 dark:text-white hover:text-slate-500 transition-colors py-2">
             <Link href="/experiences">Experiences</Link>
             <svg className={`w-3 h-3 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
           </div>
@@ -81,36 +106,30 @@ export default function Navbar() {
           </div>
         </li>
 
-        <li>
-          <Link href="/gallery" className="font-semibold text-[13px] tracking-[0.15em] uppercase text-slate-800 dark:text-white hover:text-slate-500 dark:hover:text-slate-300 transition-colors duration-300">
-            Gallery
-          </Link>
+        <li className={`${isGlassState ? 'block' : 'hidden'}`}>
+          <Link href="/gallery" className="font-bold text-[13px] tracking-[0.05em] uppercase text-slate-900 dark:text-white hover:text-slate-500 transition-colors">Gallery</Link>
         </li>
+
         <li>
-          <Link href="/contact" className="font-semibold text-[13px] tracking-[0.15em] uppercase text-slate-800 dark:text-white hover:text-slate-500 dark:hover:text-slate-300 transition-colors duration-300">
-            Contact
-          </Link>
+          <Link href="/contact" className="font-bold text-[13px] tracking-[0.05em] uppercase text-slate-900 dark:text-white hover:text-slate-500 transition-colors">Contact</Link>
         </li>
+
+        <li className={`${isGlassState ? 'block' : 'hidden'}`}>
+          <Link href="/packages" className="font-bold text-[13px] tracking-[0.05em] uppercase text-slate-900 dark:text-white hover:text-slate-500 transition-colors">Packages</Link>
+        </li>
+
         <li>
-          <Link href="/packages" className="font-semibold text-[13px] tracking-[0.15em] uppercase text-slate-800 dark:text-white hover:text-slate-500 dark:hover:text-slate-300 transition-colors duration-300">
-            Packages
-          </Link>
+          <Link href="/book-now" className="font-bold text-[13px] tracking-[0.05em] uppercase text-slate-900 dark:text-white hover:text-slate-500 transition-colors">Book Now</Link>
         </li>
       </ul>
 
       {/* Right Side Actions */}
-      <div className="flex items-center gap-3 sm:gap-5 z-50">
-        <Link 
-          href="/book-now" 
-          className="hidden lg:block bg-slate-900/80 dark:bg-white/90 text-white dark:text-black px-5 py-2.5 rounded-lg hover:bg-slate-800 dark:hover:bg-white backdrop-blur-md transition-colors duration-300 font-bold text-xs tracking-widest uppercase shadow-md"
-        >
-          Book Now
-        </Link>
-
+      <div className="flex items-center gap-4 z-50">
+        
         {/* Theme Toggle Button */}
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)}
-          className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-300 cursor-pointer outline-none flex items-center justify-center text-slate-800 dark:text-white" 
+          className={`p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-300 cursor-pointer outline-none items-center justify-center text-slate-900 dark:text-white ${isGlassState ? 'flex' : 'hidden'}`} 
           aria-label="Toggle Dark Mode"
         >
           <svg className="w-5 h-5 fill-current transition-transform duration-500 hover:-rotate-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -122,10 +141,10 @@ export default function Navbar() {
           </svg>
         </button>
 
-        {/* Mobile Hamburger */}
+        {/* Mobile Hamburger Menu Toggle */}
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden p-2 rounded-lg text-slate-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+          className="lg:hidden p-2 rounded-lg text-slate-900 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
           aria-label="Toggle Mobile Menu"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,10 +159,11 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       <div className={`absolute top-full left-0 w-full mt-4 lg:hidden z-[9999] transition-all duration-300 origin-top ${isMobileMenuOpen ? 'opacity-100 scale-y-100 visible' : 'opacity-0 scale-y-95 invisible'}`}>
-        <div className="bg-white/80 dark:bg-black/80 backdrop-blur-3xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-2xl p-6 flex flex-col gap-4">
+        <div className="bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-white/40 dark:border-white/10 shadow-2xl rounded-2xl p-6 flex flex-col gap-4">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Home</Link>
           <Link href="/rooms" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Rooms</Link>
           
+          {/* Mobile Experiences List */}
           <div className="flex flex-col gap-2">
             <span className="font-semibold text-sm tracking-widest uppercase text-slate-800/60 dark:text-white/50 border-b border-black/10 dark:border-white/10 pb-2 mb-2">Experiences</span>
             {['Dining', 'Facilities', 'Activities', 'Events & Weddings', 'Local Attractions', 'Travel Guide'].map((item, index) => (
@@ -161,14 +181,7 @@ export default function Navbar() {
           <Link href="/gallery" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Gallery</Link>
           <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Contact</Link>
           <Link href="/packages" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Packages</Link>
-          
-          <Link 
-            href="/book-now" 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="mt-4 text-center bg-slate-900/80 dark:bg-white/90 text-white dark:text-black px-6 py-3 rounded-lg backdrop-blur-md transition-colors font-bold text-xs tracking-widest uppercase shadow-md"
-          >
-            Book Now
-          </Link>
+          <Link href="/book-now" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Book Now</Link>
         </div>
       </div>
     </nav>
