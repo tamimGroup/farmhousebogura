@@ -27,7 +27,7 @@ function RevealOnScroll({ children, delay = 0, className = "" }: { children: Rea
     <div 
       ref={ref} 
       style={{ transitionDelay: `${delay}ms` }} 
-      className={`transition-all duration-[1200ms] cubic-bezier(0.25, 1, 0.5, 1) ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-24'} ${className}`}
+      className={`transition-all duration-[1200ms] cubic-bezier(0.25, 1, 0.5, 1) ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12 md:translate-y-24'} ${className}`}
     >
       {children}
     </div>
@@ -57,7 +57,7 @@ const attractions = [
   {
     id: 3,
     name: "Behular Bashor Ghor (Gokul Medh)",
-    slug: "behular-basorghor", // Matches your folder exactly
+    slug: "behular-basorghor", 
     description: "This impressive brick monument dates to the 6th–7th century AD. Although believed to be a Buddhist structure, local folklore identifies it as the legendary wedding chamber of Behula and Lakhindar.",
     distance: "~15 km",
     time: "25 min",
@@ -112,7 +112,7 @@ const attractions = [
 
 export default function LocalAttractionsPage() {
   return (
-    <main className="min-h-screen bg-[#fdfcfb] dark:bg-[#050505] text-slate-800 dark:text-slate-100 transition-colors duration-700 pt-40 pb-32 overflow-hidden">
+    <main className="min-h-screen bg-[#fdfcfb] dark:bg-[#050505] text-slate-800 dark:text-slate-100 transition-colors duration-700 pt-28 md:pt-40 pb-20 md:pb-32 overflow-hidden">
       
       {/* Internal Styles for the floating animation */}
       <style>{`
@@ -130,15 +130,15 @@ export default function LocalAttractionsPage() {
 
       {/* Modern Art Style Page Header */}
       <RevealOnScroll>
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 mb-32 flex flex-col items-center text-center">
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-light text-lg">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 mb-16 md:mb-32 flex flex-col items-center text-center">
+          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-light text-base md:text-lg">
             Explore the rich history and breathtaking landscapes surrounding Farmhouse Bogura. From ancient archaeological sites to tranquil natural parks, discover the wonders just a short drive away.
           </p>
         </div>
       </RevealOnScroll>
 
       {/* Attractions List with Modern Alternating Layout */}
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 flex flex-col gap-32 lg:gap-48">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 flex flex-col gap-20 md:gap-32 lg:gap-48">
         {attractions.map((place, index) => {
           const isEven = index % 2 === 0;
 
@@ -146,39 +146,40 @@ export default function LocalAttractionsPage() {
             <Link 
               href={`/experiences/local-attractions/${place.slug}`}
               key={place.id} 
-              className={`flex flex-col gap-12 lg:gap-24 items-center relative group ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
+              /* flex-col-reverse forces the image to the top on mobile */
+              className={`flex flex-col-reverse gap-8 md:gap-12 lg:gap-24 items-center relative group ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
             >
               
               {/* Text Content */}
-              <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10">
+              <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10 text-center lg:text-left">
                 <RevealOnScroll delay={100}>
-                  <h2 className="text-3xl md:text-4xl font-bold tracking-wide text-slate-700 dark:text-slate-200 mb-6 group-hover:text-blue-500 transition-colors duration-300">
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-wide text-slate-700 dark:text-slate-200 mb-4 md:mb-6 group-hover:text-blue-500 transition-colors duration-300">
                     {place.name}
                   </h2>
                   
-                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-10 font-light text-lg group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors duration-300">
+                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-6 md:mb-10 font-light text-sm md:text-base lg:text-lg group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors duration-300 mx-auto lg:mx-0 max-w-md lg:max-w-none">
                     {place.description}
                   </p>
 
                   {/* Minimalist Travel Details Box */}
-                  <div className="flex items-center gap-8 py-5 border-y border-slate-200 dark:border-white/10 w-max">
+                  <div className="flex items-center justify-center lg:justify-start gap-6 md:gap-8 py-4 md:py-5 border-y border-slate-200 dark:border-white/10 w-full lg:w-max mx-auto lg:mx-0">
                     <div className="flex flex-col">
                       <span className="text-[9px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-1">Distance</span>
-                      <span className="text-lg font-light tracking-tight">{place.distance}</span>
+                      <span className="text-base md:text-lg font-light tracking-tight">{place.distance}</span>
                     </div>
                     <div className="w-[1px] h-8 bg-slate-200 dark:bg-white/10"></div>
                     <div className="flex flex-col">
                       <span className="text-[9px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-1">Drive Time</span>
-                      <span className="text-lg font-light tracking-tight">{place.time}</span>
+                      <span className="text-base md:text-lg font-light tracking-tight">{place.time}</span>
                     </div>
                   </div>
                 </RevealOnScroll>
               </div>
 
               {/* Floating Transparent Image Content */}
-              <div className="w-full lg:w-1/2 relative min-h-[350px] md:min-h-[500px] flex items-center justify-center">
+              <div className="w-full lg:w-1/2 relative min-h-[250px] md:min-h-[350px] lg:min-h-[500px] flex items-center justify-center">
                 <RevealOnScroll delay={300} className="w-full h-full absolute inset-0 flex items-center justify-center">
-                  <div className={`relative w-[90%] h-[90%] transition-transform duration-500 group-hover:scale-105 ${isEven ? 'animate-float' : 'animate-float-delayed'}`}>
+                  <div className={`relative w-[90%] md:w-[80%] lg:w-[90%] h-[90%] transition-transform duration-500 group-hover:scale-105 ${isEven ? 'animate-float' : 'animate-float-delayed'}`}>
                     <Image 
                       src={place.image} 
                       alt={place.name} 

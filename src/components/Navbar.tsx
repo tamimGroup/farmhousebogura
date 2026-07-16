@@ -91,7 +91,7 @@ export default function Navbar() {
           <div className={`absolute left-0 top-full pt-4 w-56 z-[120] transition-all duration-300 ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
             <div className="bg-white/70 dark:bg-black/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-xl overflow-hidden">
               <ul className="py-2">
-                {['Dining', 'Facilities', 'Activities', 'Events & Weddings', 'Local Attractions', 'Travel Guide'].map((item, index) => (
+                {['Dining', 'Facilities', 'Activities', 'Events & Weddings', 'Local Attractions', 'Local Delicacies'].map((item, index) => (
                   <li key={index}>
                     <Link 
                       href={`/experiences/${item.toLowerCase().replace(/ /g, '-').replace(/&-/g, '')}`} 
@@ -166,7 +166,7 @@ export default function Navbar() {
           {/* Mobile Experiences List */}
           <div className="flex flex-col gap-2">
             <span className="font-semibold text-sm tracking-widest uppercase text-slate-800/60 dark:text-white/50 border-b border-black/10 dark:border-white/10 pb-2 mb-2">Experiences</span>
-            {['Dining', 'Facilities', 'Activities', 'Events & Weddings', 'Local Attractions', 'Travel Guide'].map((item, index) => (
+            {['Dining', 'Facilities', 'Activities', 'Events & Weddings', 'Local Attractions', 'Local Delicacies'].map((item, index) => (
               <Link 
                 key={index}
                 href={`/experiences/${item.toLowerCase().replace(/ /g, '-').replace(/&-/g, '')}`}
