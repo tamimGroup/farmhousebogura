@@ -87,7 +87,7 @@ const foods = [
 
 export default function LocalFoodsPage() {
   return (
-    <main className="min-h-screen bg-[#fafafa] dark:bg-[#050505] text-slate-900 dark:text-slate-100 transition-colors duration-700 pt-40 pb-32 overflow-hidden">
+    <main className="min-h-screen bg-[#fafafa] dark:bg-[#050505] text-slate-900 dark:text-slate-100 transition-colors duration-700 pt-28 md:pt-40 pb-20 md:pb-32 overflow-hidden">
       
       {/* Internal Styles for the continuous floating animation */}
       <style>{`
@@ -105,15 +105,15 @@ export default function LocalFoodsPage() {
 
       {/* Premium Editorial Style Page Header */}
       <RevealOnScroll direction="up" delay={0}>
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 mb-32 flex flex-col items-center text-center">
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-light text-xl md:text-2xl text-balance">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 mb-16 md:mb-32 flex flex-col items-center text-center">
+          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-light text-base md:text-xl lg:text-2xl text-balance">
             Experience authentic local foods that represent the culinary heritage of Bogura. From iconic slow-cooked desserts to traditional community feasts, savor the flavors of our region.
           </p>
         </div>
       </RevealOnScroll>
 
       {/* Foods List with Modern Alternating Layout */}
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 flex flex-col gap-32 lg:gap-48">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-24 flex flex-col gap-24 md:gap-32 lg:gap-48">
         {foods.map((food, index) => {
           // Determine layout and animation directions based on even/odd indexing
           const isEven = index % 2 === 0;
@@ -123,27 +123,28 @@ export default function LocalFoodsPage() {
           return (
             <div 
               key={food.id} 
-              className={`flex flex-col gap-12 lg:gap-24 items-center relative ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
+              /* flex-col-reverse ensures the image stacks on top of the text on mobile */
+              className={`flex flex-col-reverse gap-8 md:gap-12 lg:gap-24 items-center relative ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
             >
               
               {/* Text Content - Staggered Reveals */}
-              <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10">
+              <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10 text-center lg:text-left">
                 <RevealOnScroll direction={textDirection} delay={100}>
-                  <h2 className="text-3xl md:text-4xl font-bold tracking-wide text-slate-900 dark:text-white mb-6">
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-wide text-slate-900 dark:text-white mb-4 md:mb-6">
                     {food.name}
                   </h2>
                 </RevealOnScroll>
                 
                 <RevealOnScroll direction={textDirection} delay={250}>
-                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-10 font-light text-lg">
+                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-6 md:mb-10 font-light text-sm md:text-base lg:text-lg mx-auto lg:mx-0 max-w-md lg:max-w-none">
                     {food.description}
                   </p>
                 </RevealOnScroll>
 
                 <RevealOnScroll direction={textDirection} delay={400}>
                   {/* Minimalist "Where to Try" Details Box */}
-                  <div className="flex flex-col py-5 border-y border-slate-200 dark:border-white/10 w-full max-w-md group">
-                    <span className="text-[9px] font-bold text-[#b89866] uppercase tracking-[0.2em] mb-3 transition-colors duration-500 group-hover:text-slate-900 dark:group-hover:text-white">
+                  <div className="flex flex-col py-4 md:py-5 border-y border-slate-200 dark:border-white/10 w-full md:max-w-md group mx-auto lg:mx-0">
+                    <span className="text-[9px] font-bold text-[#b89866] uppercase tracking-[0.2em] mb-2 md:mb-3 transition-colors duration-500 group-hover:text-slate-900 dark:group-hover:text-white">
                       Where to Try
                     </span>
                     <span className="text-sm md:text-base font-medium tracking-tight text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -154,9 +155,10 @@ export default function LocalFoodsPage() {
               </div>
 
               {/* Floating Transparent Image Content */}
-              <div className="w-full lg:w-1/2 relative min-h-[300px] md:min-h-[450px] flex items-center justify-center pointer-events-none">
+              {/* Reduced min-h on mobile from 300px to 250px to eliminate excess gap */}
+              <div className="w-full lg:w-1/2 relative min-h-[250px] md:min-h-[350px] lg:min-h-[450px] flex items-center justify-center pointer-events-none mt-4 lg:mt-0">
                 <RevealOnScroll direction={imageDirection} delay={200} className="w-full h-full absolute inset-0 flex items-center justify-center">
-                  <div className={`relative w-[90%] h-[90%] ${isEven ? 'animate-float' : 'animate-float-delayed'}`}>
+                  <div className={`relative w-[85%] md:w-[75%] lg:w-[90%] h-[90%] ${isEven ? 'animate-float' : 'animate-float-delayed'}`}>
                     <Image 
                       src={food.image} 
                       alt={food.name} 

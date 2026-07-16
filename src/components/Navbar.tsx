@@ -15,8 +15,9 @@ export default function Navbar() {
   // Determine if we are on the home page
   const isHomePage = pathname === '/';
   
-  // The Navbar should be in its "Glass Pill" state if we are scrolled down OR if we are NOT on the homepage
-  const isGlassState = !isHomePage || isScrolled;
+  // The Navbar should be in its "Glass Pill" state if we are scrolled down, NOT on the homepage, 
+  // OR if the user expands the dropdown/mobile menu while at the top of the page.
+  const isGlassState = !isHomePage || isScrolled || isDropdownOpen || isMobileMenuOpen;
 
   // Handle Dark Mode Toggle
   useEffect(() => {
@@ -45,13 +46,22 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Dynamic class assignments based on the derived glass state
+  // Shared glass effect classes for navbar, dropdown, and mobile menu
+  const glassEffectClasses = "bg-white/45 dark:bg-black/45 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.05)] rounded-2xl";
+
+  // Removed the glassEffectClasses from the parent wrapper to prevent the "nested backdrop-filter" CSS bug.
   const navContainerClasses = isGlassState
-    ? "fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1000px] px-10 py-5 bg-white/45 dark:bg-black/45 backdrop-blur-xl border border-white/60 dark:border-white/10 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] z-[9999] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex justify-between items-center"
-    : "fixed top-0 left-0 w-full lg:w-[55%] px-6 lg:px-24 pt-8 pb-4 bg-transparent border-transparent z-[9999] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex justify-between items-center";
+    ? "fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[1000px] px-10 py-5 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex justify-between items-center"
+    : "fixed top-0 left-0 w-full lg:w-[55%] px-6 lg:px-24 pt-8 pb-4 z-[9999] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex justify-between items-center";
 
   return (
     <nav className={navContainerClasses}>
+      
+      {/* 
+        FIX: The Navbar background is now separated into an independent absolute layer. 
+        This allows the dropdown and mobile menus to properly blur the page underneath them!
+      */}
+      <div className={`absolute inset-0 -z-10 pointer-events-none transition-all duration-500 ${isGlassState ? glassEffectClasses : 'opacity-0'}`}></div>
       
       {/* Brand / Logo Area */}
       <div className={`flex items-center transition-all duration-500 ${isGlassState ? '' : 'flex-1'}`}>
@@ -89,7 +99,7 @@ export default function Navbar() {
           </div>
           
           <div className={`absolute left-0 top-full pt-4 w-56 z-[120] transition-all duration-300 ${isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
-            <div className="bg-white/70 dark:bg-black/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-xl overflow-hidden">
+            <div className={`${glassEffectClasses} overflow-hidden`}>
               <ul className="py-2">
                 {['Dining', 'Facilities', 'Activities', 'Events & Weddings', 'Local Attractions', 'Local Delicacies'].map((item, index) => (
                   <li key={index}>
@@ -159,7 +169,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       <div className={`absolute top-full left-0 w-full mt-4 lg:hidden z-[9999] transition-all duration-300 origin-top ${isMobileMenuOpen ? 'opacity-100 scale-y-100 visible' : 'opacity-0 scale-y-95 invisible'}`}>
-        <div className="bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-white/40 dark:border-white/10 shadow-2xl rounded-2xl p-6 flex flex-col gap-4">
+        <div className={`${glassEffectClasses} p-6 flex flex-col gap-4`}>
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Home</Link>
           <Link href="/rooms" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-sm tracking-widest uppercase text-slate-800 dark:text-white">Rooms</Link>
           
