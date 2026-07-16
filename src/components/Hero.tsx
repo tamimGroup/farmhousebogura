@@ -49,20 +49,21 @@ export default function Hero() {
         }
       `}</style>
 
-      <section className="relative flex flex-col lg:flex-row h-screen w-full bg-white dark:bg-[#0a0a0a] overflow-hidden text-slate-900 dark:text-white transition-colors duration-500">
+      {/* Added max-md:h-auto max-md:min-h-[100dvh] and max-md:overflow-y-auto strictly for mobile scrolling */}
+      <section className="relative flex flex-col lg:flex-row h-screen max-md:h-auto max-md:min-h-[100dvh] w-full bg-white dark:bg-[#0a0a0a] overflow-hidden max-md:overflow-y-auto text-slate-900 dark:text-white transition-colors duration-500">
         
-        {/* Left Column */}
-        <div className="relative z-10 w-full lg:w-[55%] h-full px-8 lg:px-24 pt-32 pb-10 flex flex-col pointer-events-auto">
+        {/* Left Column - Added max-md:pt-[420px] so the text is pushed down safely below the mobile absolute image */}
+        <div className="relative z-10 w-full lg:w-[55%] h-full max-md:h-auto px-8 lg:px-24 pt-32 max-md:pt-[420px] pb-10 flex flex-col pointer-events-auto">
           
           {/* Main Content */}
           <main className="flex-grow flex flex-col justify-center max-w-[500px]">
             
-            {/* NEW STYLED HEADING */}
             <h1 className="flex flex-col leading-[1.1] mb-6 mt-8 lg:mt-0">
-              <span className="text-[clamp(1.5rem,2vw,2rem)] font-light text-[#666] dark:text-[#a3a3a3] tracking-wide mb-1">
+              {/* Added max-md:text-... specifically to scale down text on phones without touching PC */}
+              <span className="text-[clamp(1.5rem,2vw,2rem)] max-md:text-[clamp(1.25rem,4vw,1.5rem)] font-light text-[#666] dark:text-[#a3a3a3] tracking-wide mb-1">
                 Welcome to
               </span>
-              <span className="text-[clamp(3.5rem,4.5vw,4.5rem)] font-black text-gray-800 dark:text-white tracking-widest uppercase">
+              <span className="text-[clamp(3.5rem,4.5vw,4.5rem)] max-md:text-[clamp(2.5rem,8vw,3.5rem)] font-black text-gray-800 dark:text-white tracking-widest uppercase max-md:leading-tight">
                 Farmhouse Bogura
               </span>
             </h1>
@@ -82,9 +83,11 @@ export default function Hero() {
           </main>
 
           {/* Footer Area */}
-          <footer className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-4 mt-8">
+          {/* Changed gap-6 to gap-3 for mobile to pull the address closer and make it equal spacing */}
+          <footer className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4 mt-6">
             
-            <div className="flex flex-col gap-4">
+            {/* Changed gap-4 to gap-3 for mobile to match the grid gap above exactly */}
+            <div className="flex flex-col gap-3 lg:gap-4">
               {/* Website Link */}
               <div className="flex items-center gap-3 text-xs font-semibold text-[#888] dark:text-gray-400">
                 <svg className="w-[18px] h-[18px] text-[#111] dark:text-white shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
